@@ -7,7 +7,7 @@ This library offers an OAuth 2.0 Authorization Server based on go-chi and an Aut
 
 
 ## Build status
-[![Build Status](https://travis-ci.org/jeffreydwalter/oauth.svg?branch=master)](https://travis-ci.org/jeffreydwalter/oauth)
+[![Build Status](https://app.travis-ci.com/jeffreydwalter/oauth.svg?branch=master)](https://app.travis-ci.com/github/jeffreydwalter/oauth)
 
 ## Authorization Server
 The Authorization Server is implemented by the struct _OAuthBearerServer_ that manages two grant types of authorizations (password and client_credentials). 
