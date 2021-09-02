@@ -91,7 +91,7 @@ func (s *OAuthBearerServer) UserCredentials(w http.ResponseWriter, r *http.Reque
 func (s *OAuthBearerServer) ClientCredentials(w http.ResponseWriter, r *http.Request) {
 	grantType := r.FormValue("grant_type")
 	// grant_type client_credentials variables
-	clientID := r.FormValue("client_ID")
+	clientID := r.FormValue("client_id")
 	clientSecret := r.FormValue("client_secret")
 	if clientID == "" || clientSecret == "" {
 		// get clientID and secret from basic authorization header
@@ -114,7 +114,7 @@ func (s *OAuthBearerServer) ClientCredentials(w http.ResponseWriter, r *http.Req
 func (s *OAuthBearerServer) AuthorizationCode(w http.ResponseWriter, r *http.Request) {
 	grantType := r.FormValue("grant_type")
 	// grant_type client_credentials variables
-	clientID := r.FormValue("client_ID")
+	clientID := r.FormValue("client_id")
 	clientSecret := r.FormValue("client_secret") // not mandatory
 	code := r.FormValue("code")
 	redirectURI := r.FormValue("redirect_uri") // not mandatory
