@@ -38,14 +38,14 @@ The interface _CredentialsVerifier_ defines the hooks called during the token ge
 The methods are called in this order:
 - _ValidateUser() or ValidateClient()_ called first for credentials verification
 - _AddClaims()_ used for add information to the token that will be encrypted
-- _StoreTokenId()_ called after the token generation but before the response, programmers can use this method for storing the generated Ids
+- _StoreTokenID()_ called after the token generation but before the response, programmers can use this method for storing the generated Ids
 - _AddProperties()_ used for add clear information to the response
 
 There is another method in the _CredentialsVerifier_ interface that is involved during the refresh token process. 
 In this case the methods are called in this order:
-- _ValidateTokenId()_ called first for TokenId verification, the method receives the TokenId related to the token associated to the refresh token
+- _ValidateTokenID()_ called first for TokenId verification, the method receives the TokenId related to the token associated to the refresh token
 - _AddClaims()_ used for add information to the token that will be encrypted
-- _StoreTokenId()_ called after the token regeneration but before the response, programmers can use this method for storing the generated Ids
+- _StoreTokenID()_ called after the token regeneration but before the response, programmers can use this method for storing the generated Ids
 - _AddProperties()_ used for add clear information to the response
 
 ## Authorization Server usage example
@@ -82,10 +82,6 @@ This snippet shows how to use the middleware
 See [/test/resourceserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/resourceserver/main.go) for the full example.
 
 Note that the authorization server and the authorization middleware are both using the same token formatter and the same secret key for encryption/decryption.
-
-## Note
-This master branch introduces breaking changes in the interface CredentialsVerifier methods _ValidateUser_, _ValidateClient_ and _AddClaims_. Refer to v1 branch for the previous implementation.
-Updated server implementation in v3 due to go.uuid library change.
 
 ## Reference
 - [OAuth 2.0 RFC](https://tools.ietf.org/html/rfc6749)
