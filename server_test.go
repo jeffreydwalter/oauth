@@ -68,7 +68,7 @@ func TestDecryptRefreshTokens(t *testing.T) {
 }
 
 func TestGenerateToken4Password(t *testing.T) {
-	code, resp := _sut.generateTokenResponse("password", "user111", "password111", "", "", "", "", nil)
+	resp, code := _sut.generateTokenResponse("password", "user111", "password111", "", "", "", "", nil)
 	if code != 200 {
 		t.Fatalf("Error StatusCode = %d", code)
 	}
@@ -76,7 +76,7 @@ func TestGenerateToken4Password(t *testing.T) {
 }
 
 func TestShouldFailGenerateToken4Password(t *testing.T) {
-	code, _ := _sut.generateTokenResponse("password", "user111", "password4444", "", "", "", "", nil)
+	_, code := _sut.generateTokenResponse("password", "user111", "password4444", "", "", "", "", nil)
 	t.Logf("Server response: %v", code)
 	if code != 401 {
 		t.Fatalf("Error StatusCode = %d", code)
@@ -84,7 +84,7 @@ func TestShouldFailGenerateToken4Password(t *testing.T) {
 }
 
 func TestGenerateToken4ClientCredentials(t *testing.T) {
-	code, resp := _sut.generateTokenResponse("client_credentials", "abcdef", "12345", "", "", "", "", nil)
+	resp, code := _sut.generateTokenResponse("client_credentials", "abcdef", "12345", "", "", "", "", nil)
 	if code != 200 {
 		t.Fatalf("Error StatusCode = %d", code)
 	}
@@ -92,12 +92,12 @@ func TestGenerateToken4ClientCredentials(t *testing.T) {
 }
 
 func TestRefreshToken4ClientCredentials(t *testing.T) {
-	code, resp := _sut.generateTokenResponse("client_credentials", "abcdef", "12345", "", "", "", "", nil)
+	resp, code := _sut.generateTokenResponse("client_credentials", "abcdef", "12345", "", "", "", "", nil)
 	if code != 200 {
 		t.Fatalf("Error StatusCode = %d", code)
 	}
 	t.Logf("Token Response: %v", resp)
-	code2, resp2 := _sut.generateTokenResponse("refresh_token", "", "", resp.(*TokenResponse).RefreshToken, "", "", "", nil)
+	resp2, code2 := _sut.generateTokenResponse("refresh_token", "", "", resp.(*TokenResponse).RefreshToken, "", "", "", nil)
 	if code2 != 200 {
 		t.Fatalf("Error StatusCode = %d", code2)
 	}

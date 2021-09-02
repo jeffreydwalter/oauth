@@ -6,8 +6,16 @@ import (
 	"net/http"
 	"strings"
 	"time"
+)
 
-	"github.com/go-chi/render"
+type contextKey string
+
+const (
+	credential  contextKey = "oauth.credential"
+	claims      contextKey = "oauth.claims"
+	scope       contextKey = "oauth.scope"
+	tokenType   contextKey = "oauth.tokentype"
+	accessToken contextKey = "oauth.accesstoken"
 )
 
 // BearerAuthentication middleware for go-chi
@@ -41,15 +49,14 @@ func (ba *BearerAuthentication) Authorize(next http.Handler) http.Handler {
 		token, err := ba.checkAuthorizationHeader(auth)
 		ctx := r.Context()
 		if err != nil {
-			w.WriteHeader(http.StatusUnauthorized)
-			render.JSON(w, r, "Not authorized: "+err.Error())
+			renderJSON(w, "Not authorized: "+err.Error(), http.StatusUnauthorized)
 			return
 		} else {
-			context.WithValue(ctx, "oauth.credential", token.Credential)
-			context.WithValue(ctx, "oauth.claims", token.Claims)
-			context.WithValue(ctx, "oauth.scope", token.Scope)
-			context.WithValue(ctx, "oauth.tokentype", token.TokenType)
-			context.WithValue(ctx, "oauth.accesstoken", auth[7:])
+			context.WithValue(ctx, credential, token.Credential)
+			context.WithValue(ctx, claims, token.Claims)
+			context.WithValue(ctx, scope, token.Scope)
+			context.WithValue(ctx, tokenType, token.TokenType)
+			context.WithValue(ctx, accessToken, auth[7:])
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
 	})

@@ -13,7 +13,7 @@ func init() {
 }
 
 func TestAuthorizationHeader(t *testing.T) {
-	code, resp := _sut.generateTokenResponse("password", "user111", "password111", "", "", "", "", nil)
+	resp, code := _sut.generateTokenResponse("password", "user111", "password111", "", "", "", "", nil)
 	if code != 200 {
 		t.Fatalf("Error StatusCode = %d", code)
 	}
@@ -31,7 +31,7 @@ func TestExpiredAuthorizationHeader(t *testing.T) {
 	header := `Bearer wMFZSkQ1kSTbQ9mkHufsfeHCnKo05TSEyLyjSiKOafAUQv7s0NClIgBQSDGKoRzeWfB2G0bKO7EE3P9MnaZNxkx2CtWVfTJkCXsIpo2eyF8Nw+ub5nr4Bxmj6JeOumQMrFogBHMnMT7Em7EhqQO+CICQ3cVX5suqsVkEZ/gkXfjKnnEH6qKYz3S3IN/ry3pVGaQc1wAn/cYqPA1SD+CAYqkriWgIGWJmYv3W9eRSoEWgfgigdM6kmZvlDxTlrACLOvzA/JCXK7qnP8TuFz4yAtNmBoNVw0PTjxIdBFJEC7RdZyQcO3SdgGykxgPqGhiW3Z4F7ZG3mzmy/SoSJIPnmmFIreDWt6+QOsUyeHkEu74G`
 	_, err := _mut.checkAuthorizationHeader(header)
 	if err == nil {
-		t.Fatalf("Error %s", err.Error())
+		t.Fatalf("Error should have occurred")
 	}
 	t.Logf("Error : %v", err)
 }

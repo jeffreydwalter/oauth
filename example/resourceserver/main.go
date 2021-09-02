@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/go-chi/render"
+
 	"github.com/jeffreydwalter/oauth"
 )
 
@@ -47,7 +49,7 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	registerAPI(r)
-	http.ListenAndServe(":8081", r)
+	_ = http.ListenAndServe(":8081", r)
 }
 
 func registerAPI(r *chi.Mux) {
@@ -55,26 +57,38 @@ func registerAPI(r *chi.Mux) {
 		// use the Bearer Authentication middleware
 		r.Use(oauth.Authorize("mySecretKey-10101", nil))
 		r.Get("/customers", GetCustomers)
-		r.Get("/customers/:id/orders", GetOrders)
+		r.Get("/customers/{id}/orders", GetOrders)
 	})
 }
 
-func GetCustomers(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	render.JSON(w, r, `{
+func renderJSON(w http.ResponseWriter, v interface{}, statusCode int) {
+	buf := &bytes.Buffer{}
+	enc := json.NewEncoder(buf)
+	enc.SetEscapeHTML(true)
+	if err := enc.Encode(v); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(statusCode)
+	_, _ = w.Write(buf.Bytes())
+}
+
+func GetCustomers(w http.ResponseWriter, _ *http.Request) {
+	renderJSON(w, `{
 		"Status":        "verified",
 		"Customer":      "test001",
 		"CustomerName":  "Max",
 		"CustomerEmail": "test@test.com",
-	}`)
+	}`, http.StatusOK)
 }
 
-func GetOrders(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	render.JSON(w, r, `{
+func GetOrders(w http.ResponseWriter, _ *http.Request) {
+	renderJSON(w, `{
 		"status":          "sent",
 		"customer":        c.Param("id"),
 		"OrderId":         "100234",
 		"TotalOrderItems": "199",
-	}`)
+	}`, http.StatusOK)
 }
