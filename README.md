@@ -52,19 +52,19 @@ In this case the methods are called in this order:
 This snippet shows how to create an authorization server
 ```Go
 func main() {
-	router := gin.New()
-	router.Use(gin.Recovery())
-	router.Use(gin.Logger())
+    r := chi.NewRouter()
+    r.Use(middleware.Logger)
+    r.Use(middleware.Recoverer)
 
     s := oauth.NewOAuthBearerServer(
-		"mySecretKey-10101",
-		time.Second*120,
-		&TestUserVerifier{},
-		nil)
-	router.POST("/token", s.UserCredentials)
-	router.POST("/auth", s.ClientCredentials)
+        "mySecretKey-10101",
+	time.Second*120,
+	&TestUserVerifier{},
+	nil)
 	
-	router.Run(":9090")
+    r.Post("/token", s.UserCredentials)
+    r.Post("/auth", s.ClientCredentials)
+    http.ListenAndServe(":8080", r)
 }
 ```
 See [/test/authserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/authserver/main.go) for the full example.
@@ -72,12 +72,13 @@ See [/test/authserver/main.go](https://github.com/jeffreydwalter/oauth/blob/mast
 ## Authorization Middleware usage example
 This snippet shows how to use the middleware
 ```Go
-    authorized := router.Group("/")
+    r.Route("/", func(r chi.Router) {
 	// use the Bearer Authentication middleware
-	authorized.Use(oauth.Authorize("mySecretKey-10101", nil))
+	r.Use(oauth.Authorize("mySecretKey-10101", nil))
 
-	authorized.GET("/customers", GetCustomers)
-	authorized.GET("/customers/:id/orders", GetOrders)
+	r.Get("/customers", GetCustomers)
+	r.Get("/customers/{id}/orders", GetOrders)
+    }
 ```
 See [/test/resourceserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/resourceserver/main.go) for the full example.
 
