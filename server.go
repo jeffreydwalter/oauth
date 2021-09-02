@@ -1,6 +1,7 @@
 package oauth
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -24,11 +25,11 @@ type CredentialsVerifier interface {
 	// Validate clientID and secret returning an error if the client credentials are wrong
 	ValidateClient(clientID, clientSecret, scope string, req *http.Request) error
 	// Provide additional claims to the token
-	AddClaims(tokenType TokenType, credential, tokenID, scope string) (map[string]string, error)
+	AddClaims(ctx context.Context, tokenType TokenType, credential, tokenID, scope string) (map[string]string, error)
 	// Optionally store the tokenID generated for the user
 	StoreTokenID(tokenType TokenType, credential, tokenID, refreshTokenID string) error
 	// Provide additional information to the authorization server response
-	AddProperties(tokenType TokenType, credential, tokenID, scope string) (map[string]string, error)
+	AddProperties(ctx context.Context, tokenType TokenType, credential, tokenID, scope string) (map[string]string, error)
 	// Optionally validate previously stored tokenID during refresh request
 	ValidateTokenID(tokenType TokenType, credential, tokenID, refreshTokenID string) error
 }
@@ -231,7 +232,7 @@ func (s *OAuthBearerServer) generateTokens(tokenType TokenType, username, scope 
 	// generate token ID
 	token.ID = uuid.Must(uuid.NewV4()).String()
 	if s.verifier != nil {
-		claims, err := s.verifier.AddClaims(token.TokenType, username, token.ID, token.Scope)
+		claims, err := s.verifier.AddClaims(context.TODO(), token.TokenType, username, token.ID, token.Scope)
 		if err != nil {
 			// claims error
 			return nil, nil, err
@@ -257,7 +258,7 @@ func (s *OAuthBearerServer) cryptTokens(token *Token, refresh *RefreshToken) (re
 
 	if s.verifier != nil {
 		// add properties
-		props, err := s.verifier.AddProperties(token.TokenType, token.Credential, token.ID, token.Scope)
+		props, err := s.verifier.AddProperties(context.TODO(), token.TokenType, token.Credential, token.ID, token.Scope)
 		if err != nil {
 			return nil, err
 		}

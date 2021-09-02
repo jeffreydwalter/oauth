@@ -1,6 +1,7 @@
 package oauth
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -130,7 +131,7 @@ func (*TestUserVerifier) ValidateClient(clientId, clientSecret, scope string, re
 }
 
 // Provide additional claims to the token
-func (*TestUserVerifier) AddClaims(tokenType TokenType, credential, tokenID, scope string) (map[string]string, error) {
+func (*TestUserVerifier) AddClaims(ctx context.Context, tokenType TokenType, credential, tokenID, scope string) (map[string]string, error) {
 	claims := make(map[string]string)
 	claims["customerId"] = "1001"
 	claims["customerData"] = `{"OrderDate":"2016-12-14","OrderId":"9999"}`
@@ -143,7 +144,7 @@ func (*TestUserVerifier) StoreTokenID(tokenType TokenType, credential, tokenID, 
 }
 
 // Provide additional information to the token response
-func (*TestUserVerifier) AddProperties(tokenType TokenType, credential, tokenID, scope string) (map[string]string, error) {
+func (*TestUserVerifier) AddProperties(ctx context.Context, tokenType TokenType, credential, tokenID, scope string) (map[string]string, error) {
 	props := make(map[string]string)
 	props["customerName"] = "Gopher"
 	return props, nil
