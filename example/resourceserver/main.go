@@ -7,8 +7,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
-
-	"github.com/oauth"
+	"github.com/jeffreydwalter/oauth"
 )
 
 /*

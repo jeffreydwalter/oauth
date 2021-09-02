@@ -1,4 +1,4 @@
-module github.com/oauth
+module github.com/jeffreydwalter/oauth
 
 go 1.16
 
