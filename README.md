@@ -1,6 +1,8 @@
 # oauth middleware
 OAuth 2.0 Authorization Server &amp; Authorization Middleware for [go-chi](https://github.com/go-chi/chi)
 
+This library was ported to go-chi from https://github.com/maxzerbini/oauth.
+
 This library offers an OAuth 2.0 Authorization Server based on go-chi and an Authorization Middleware usable in Resource Servers developed with go-chi.
 
 
