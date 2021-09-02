@@ -7,7 +7,6 @@ import (
 )
 
 func TestGetBasicAuthentication(t *testing.T) {
-
 	req, _ := http.NewRequest("GET", "/token", nil)
 	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte("admin:password123456")))
 

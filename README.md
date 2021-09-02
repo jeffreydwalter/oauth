@@ -1,11 +1,11 @@
 # oauth middleware
-OAuth 2.0 Authorization Server &amp; Authorization Middleware for [Gin-Gonic](https://github.com/gin-gonic/gin)
+OAuth 2.0 Authorization Server &amp; Authorization Middleware for [go-chi](https://github.com/go-chi/chi)
 
-This library offers an OAuth 2.0 Authorization Server based on Gin-Gonic and an Authorization Middleware usable in Resource Servers developed with Gin-Gonic.
+This library offers an OAuth 2.0 Authorization Server based on go-chi and an Authorization Middleware usable in Resource Servers developed with go-chi.
 
 
 ## Build status
-[![Build Status](https://travis-ci.org/maxzerbini/oauth.svg?branch=master)](https://travis-ci.org/maxzerbini/oauth)
+[![Build Status](https://travis-ci.org/jeffreydwalter/oauth.svg?branch=master)](https://travis-ci.org/jeffreydwalter/oauth)
 
 ## Authorization Server
 The Authorization Server is implemented by the struct _OAuthBearerServer_ that manages two grant types of authorizations (password and client_credentials). 
@@ -24,7 +24,7 @@ These grant types are currently partially supported implementing AuthorizationCo
 If authorization token will expire, the client can regenerate the token calling the authorization server and using the refresh_token grant type.
 
 ## Authorization Middleware 
-The Gin-Gonic middleware _BearerAuthentication_ intercepts the resource server calls and authorizes only resource requests containing a valid bearer token.
+The go-chi middleware _BearerAuthentication_ intercepts the resource server calls and authorizes only resource requests containing a valid bearer token.
 
 ## Token Formatter
 Authorization Server crypts the token using the Token Formatter and Authorization Middleware decrypts the token using the same Token Formatter.
@@ -65,19 +65,19 @@ func main() {
 	router.Run(":9090")
 }
 ```
-See [/test/authserver/main.go](https://github.com/maxzerbini/oauth/blob/master/test/authserver/main.go) for the full example.
+See [/test/authserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/authserver/main.go) for the full example.
 
 ## Authorization Middleware usage example
 This snippet shows how to use the middleware
 ```Go
     authorized := router.Group("/")
-	// use the Bearer Athentication middleware
+	// use the Bearer Authentication middleware
 	authorized.Use(oauth.Authorize("mySecretKey-10101", nil))
 
 	authorized.GET("/customers", GetCustomers)
 	authorized.GET("/customers/:id/orders", GetOrders)
 ```
-See [/test/resourceserver/main.go](https://github.com/maxzerbini/oauth/blob/master/test/resourceserver/main.go) for the full example.
+See [/test/resourceserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/resourceserver/main.go) for the full example.
 
 Note that the authorization server and the authorization middleware are both using the same token formatter and the same secret key for encryption/decryption.
 
@@ -90,4 +90,4 @@ Updated server implementation in v3 due to go.uuid library change.
 - [OAuth 2.0 Bearer Token Usage RFC](https://tools.ietf.org/html/rfc6750)
 
 ## License
-[MIT](https://github.com/maxzerbini/oauth/blob/master/LICENSE)
+[MIT](https://github.com/jeffreydwalter/oauth/blob/master/LICENSE)

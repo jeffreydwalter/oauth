@@ -8,7 +8,8 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
-	"github.com/jeffreydwalter/oauth"
+
+	"github.com/oauth"
 )
 
 /*
@@ -34,7 +35,7 @@ import (
 
 		grant_type=client_credentials&client_id=abcdef&client_secret=12345
 
-	Refresh Token
+	RefreshTokenGrant Token
 
 		POST http://localhost:3000/token
 		User-Agent: Fiddler
@@ -58,10 +59,10 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	registerAPI(r)
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":8080", r)
 }
 
-func registerAPI(r *chi.Router) {
+func registerAPI(r *chi.Mux) {
 	s := oauth.NewOAuthBearerServer(
 		"mySecretKey-10101",
 		time.Second*120,
@@ -92,31 +93,31 @@ func (*TestUserVerifier) ValidateClient(clientID, clientSecret, scope string, re
 }
 
 // AddClaims provides additional claims to the token
-func (*TestUserVerifier) AddClaims(credential, tokenID, tokenType, scope string) (map[string]string, error) {
+func (*TestUserVerifier) AddClaims(tokenType oauth.TokenType, credential, tokenID, scope string) (map[string]string, error) {
 	claims := make(map[string]string)
 	claims["customerId"] = "1001"
 	claims["customerData"] = `{"OrderDate":"2016-12-14","OrderId":"9999"}`
 	return claims, nil
 }
 
-// StoreTokenId saves the token Id generated for the user
-func (*TestUserVerifier) StoreTokenId(credential, tokenId, refreshTokenID, tokenType string) error {
+// StoreTokenId saves the token id generated for the user
+func (*TestUserVerifier) StoreTokenID(tokenType oauth.TokenType, credential, tokenID, refreshTokenID string) error {
 	return nil
 }
 
 // AddProperties provides additional information to the token response
-func (*TestUserVerifier) AddProperties(credential, tokenId, tokenType string, scope string) (map[string]string, error) {
+func (*TestUserVerifier) AddProperties(tokenType oauth.TokenType, credential, tokenID, scope string) (map[string]string, error) {
 	props := make(map[string]string)
 	props["customerName"] = "Gopher"
 	return props, nil
 }
 
-// ValidateTokenId validates token Id
-func (*TestUserVerifier) ValidateTokenId(credential, tokenId, refreshTokenID, tokenType string) error {
+// ValidateTokenId validates token ID
+func (*TestUserVerifier) ValidateTokenID(tokenType oauth.TokenType, credential, tokenID, refreshTokenID string) error {
 	return nil
 }
 
-// ValidateCode validates token Id
+// ValidateCode validates token ID
 func (*TestUserVerifier) ValidateCode(clientID, clientSecret, code, redirectURI string, req *http.Request) (string, error) {
 	return "", nil
 }

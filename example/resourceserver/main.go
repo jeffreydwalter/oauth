@@ -6,7 +6,9 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
-	"github.com/jeffreydwalter/oauth"
+	"github.com/go-chi/render"
+
+	"github.com/oauth"
 )
 
 /*
@@ -46,10 +48,10 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	registerAPI(r)
-	http.ListenAndServe(":3200", r)
+	http.ListenAndServe(":8081", r)
 }
 
-func registerAPI(r *chi.Router) {
+func registerAPI(r *chi.Mux) {
 	r.Route("/", func(r chi.Router) {
 		// use the Bearer Authentication middleware
 		r.Use(oauth.Authorize("mySecretKey-10101", nil))
@@ -58,8 +60,9 @@ func registerAPI(r *chi.Router) {
 	})
 }
 
-func GetCustomers(w http.ResponseWriter, _ *http.Request) {
-	router.JSON(w, http.StatusOK, `{
+func GetCustomers(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	render.JSON(w, r, `{
 		"Status":        "verified",
 		"Customer":      "test001",
 		"CustomerName":  "Max",
@@ -67,8 +70,9 @@ func GetCustomers(w http.ResponseWriter, _ *http.Request) {
 	}`)
 }
 
-func GetOrders(w http.ResponseWriter, _ *http.Request) {
-	router.JSON(w, http.StatusOK, `{
+func GetOrders(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	render.JSON(w, r, `{
 		"status":          "sent",
 		"customer":        c.Param("id"),
 		"OrderId":         "100234",

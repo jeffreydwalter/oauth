@@ -30,12 +30,9 @@ func CheckBasicAuthentication(username, password string, r *http.Request) error 
 	u, p, err := GetBasicAuthentication(r)
 	if err != nil {
 		return err
-	} else {
-		if u != "" && p != "" {
-			if u != username && p != password {
-				return errors.New("Invalid credentials")
-			}
-		}
-		return nil
 	}
+	if u != "" && p != "" && u != username && p != password {
+		return errors.New("invalid credentials")
+	}
+	return nil
 }
