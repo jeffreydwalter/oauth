@@ -1,13 +1,13 @@
 # oauth middleware
 OAuth 2.0 Authorization Server &amp; Authorization Middleware for [go-chi](https://github.com/go-chi/chi)
 
-This library was ported to go-chi from https://github.com/maxzerbini/oauth.
+This library was ported to go-chi from https://github.com/maxzerbini/oauth by [jeffreydwalter](https://github.com/jeffreydwalter/oauth).
 
 This library offers an OAuth 2.0 Authorization Server based on go-chi and an Authorization Middleware usable in Resource Servers developed with go-chi.
 
 
 ## Build status
-[![Build Status](https://app.travis-ci.com/jeffreydwalter/oauth.svg?branch=master)](https://app.travis-ci.com/github/jeffreydwalter/oauth)
+[![Build Status](https://app.travis-ci.com/go-chi/oauth.svg?branch=master)](https://app.travis-ci.com/github/go-chi/oauth)
 
 ## Authorization Server
 The Authorization Server is implemented by the struct _OAuthBearerServer_ that manages two grant types of authorizations (password and client_credentials). 
@@ -38,14 +38,14 @@ The interface _CredentialsVerifier_ defines the hooks called during the token ge
 The methods are called in this order:
 - _ValidateUser() or ValidateClient()_ called first for credentials verification
 - _AddClaims()_ used for add information to the token that will be encrypted
-- _StoreTokenID()_ called after the token generation but before the response, programmers can use this method for storing the generated Ids
+- _StoreTokenID()_ called after the token generation but before the response, programmers can use this method for storing the generated IDs
 - _AddProperties()_ used for add clear information to the response
 
 There is another method in the _CredentialsVerifier_ interface that is involved during the refresh token process. 
 In this case the methods are called in this order:
-- _ValidateTokenID()_ called first for TokenId verification, the method receives the TokenId related to the token associated to the refresh token
+- _ValidateTokenID()_ called first for TokenID verification, the method receives the TokenID related to the token associated to the refresh token
 - _AddClaims()_ used for add information to the token that will be encrypted
-- _StoreTokenID()_ called after the token regeneration but before the response, programmers can use this method for storing the generated Ids
+- _StoreTokenID()_ called after the token regeneration but before the response, programmers can use this method for storing the generated IDs
 - _AddProperties()_ used for add clear information to the response
 
 ## Authorization Server usage example
@@ -67,7 +67,7 @@ func main() {
     http.ListenAndServe(":8080", r)
 }
 ```
-See [/test/authserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/authserver/main.go) for the full example.
+See [/test/authserver/main.go](https://github.com/go-chi/oauth/blob/master/test/authserver/main.go) for the full example.
 
 ## Authorization Middleware usage example
 This snippet shows how to use the middleware
@@ -80,7 +80,7 @@ This snippet shows how to use the middleware
 	r.Get("/customers/{id}/orders", GetOrders)
     }
 ```
-See [/test/resourceserver/main.go](https://github.com/jeffreydwalter/oauth/blob/master/test/resourceserver/main.go) for the full example.
+See [/test/resourceserver/main.go](https://github.com/go-chi/oauth/blob/master/test/resourceserver/main.go) for the full example.
 
 Note that the authorization server and the authorization middleware are both using the same token formatter and the same secret key for encryption/decryption.
 
@@ -89,4 +89,4 @@ Note that the authorization server and the authorization middleware are both usi
 - [OAuth 2.0 Bearer Token Usage RFC](https://tools.ietf.org/html/rfc6750)
 
 ## License
-[MIT](https://github.com/jeffreydwalter/oauth/blob/master/LICENSE)
+[MIT](https://github.com/go-chi/oauth/blob/master/LICENSE)
