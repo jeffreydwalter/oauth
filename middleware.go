@@ -3,6 +3,7 @@ package oauth
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -44,7 +45,9 @@ func Authorize(secretKey string, formatter TokenSecureFormatter) func(next http.
 // Token is retrieved from the Authorization HTTP header that respects the format
 // Authorization: Bearer {access_token}
 func (ba *BearerAuthentication) Authorize(next http.Handler) http.Handler {
+	log.Print("Authorize middleware")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Print("Authorize handler")
 		auth := r.Header.Get("Authorization")
 		token, err := ba.checkAuthorizationHeader(auth)
 		if err != nil {
